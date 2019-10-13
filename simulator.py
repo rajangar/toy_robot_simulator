@@ -1,140 +1,35 @@
-VALID_CMDS = ['PLACE',
-              'MOVE',
-              'LEFT',
-              'RIGHT',
-              'REPORT']
-
-VALID_DIRECTIONS = ['NORTH',
-                    'WEST',
-                    'SOUTH',
-                    'EAST']
+from toy_robot import ToyRobot
+from command_type import CommandType
+from errors import *
 
 
 class RobotSimulator:
     """ Provide Robot simulation through commands
     """
-
     def __init__(self):
-        self.cur_pos = [0, 0, VALID_DIRECTIONS[0]]
-        self.output = []
-
-        # self.commands_file = commands_file
-        # self.cur_pos = [0, 0, VALID_DIRECTIONS[0]]
-        # self.output = []
-
-    def simulate(self, commands):
-        """ Simulate the commmands from the file
-        And validate if file contain the correct commands
         """
-
-        first_cmd_registered = False
-        try:
-            for cmd in commands:
-                if self.is_valid_cmd(cmd):
-                    self.cur_cmd = cmd.rstrip()
-                    if not first_cmd_registered:
-                        if cmd.split()[0] == VALID_CMDS[0]:
-                            first_cmd_registered = True
-                        else:
-                            print("Command:", self.cur_cmd, "is skipped, as come before valid PLACE command")
-                            continue
-                    self.run_cmd(cmd)
-                else:
-                    print("Command:", cmd.rstrip(), "is not a valid command")
-        except FileNotFoundError as e:
-            print(self.commands_file, "not present, error = ", e)
-
-        return self.output
-
-    def run_cmd(self, command):
-        """ Here actual commands are running
+        Pick a ToyRobot object and CommandType (which provide classification of command)
         """
-        cmd = command.split()[0]
-        if cmd == 'PLACE':
-            strs = command.split()[1].split(',')
-            self.place(strs[0], strs[1], strs[2])
-        else:
-            getattr(self, cmd.lower())()
+        self.robot = ToyRobot()
+        self.cmd_type = CommandType()
 
-    def place(self, row, col, direction):
-        """ Place the robot on mentioned place
+    def simulate(self, lines):
         """
-        self.cur_pos = [int(row), int(col), direction]
-
-    def move(self):
-        """ Move the robot one position in the direction it is facing
-        OR skip it, if chance of falling down
+        Find out the command type and run on the ToyRobot object
+        :param lines: lines could be a generator type or list, which contain all the commands
+        :return: Returns result list, produced by REPORT commands
         """
-        if self.cur_pos[2] == 'NORTH':
-            self.cur_pos[1] = self.add_one_or_not(self.cur_pos[1])
-        elif self.cur_pos[2] == 'SOUTH':
-            self.cur_pos[1] = self.minus_one_or_not(self.cur_pos[1])
-        elif self.cur_pos[2] == 'WEST':
-            self.cur_pos[0] = self.minus_one_or_not(self.cur_pos[0])
-        elif self.cur_pos[2] == 'EAST':
-            self.cur_pos[0] = self.add_one_or_not(self.cur_pos[0])
+        reports = []
+        for line in lines:
+            try:
+                # Find out the command_type object by parsing the line
+                command_type = self.cmd_type.parse(line)
+                # run the actual command on ToyRobot and append the result in reports list
+                command_type.run(self.robot, reports)
+            except UserDefinedError as e:
+                # UserDefinedError has different errors, which caught here to skip only invalid line
+                print("Command {} skipped, {}".format(line, e))
+            except ValueError as e:
+                print("Command {} skipped, {}".format(line, e))
 
-    def left(self):
-        """ Change the facing of Robot to turn left
-        """
-        ind = VALID_DIRECTIONS.index(self.cur_pos[2])
-        self.cur_pos[2] = VALID_DIRECTIONS[(ind + 1) % 4]
-
-    def right(self):
-        """ Change the facing of Robot to turn right
-        """
-        ind = VALID_DIRECTIONS.index(self.cur_pos[2])
-        self.cur_pos[2] = VALID_DIRECTIONS[(ind - 1) % 4]
-
-    def report(self):
-        """ Report the current position and facing of Robot to stdout
-        And also in output to return back
-        """
-        print("REPORT:", self.cur_pos)
-        self.output.append(self.cur_pos)
-
-    def add_one_or_not(self, val):
-        """ Check if it is a valid add to column or row
-        """
-        if val + 1 > 4:
-            print("Command:", self.cur_cmd, "will skip, Robot will fall down")
-            return val
-        return val + 1
-
-    def minus_one_or_not(self, val):
-        """ Check if it is a valid minus to column or row
-        """
-        if val - 1 < 0:
-            print("Command:", self.cur_cmd, "will skip, Robot will fall down")
-            return val
-        return val - 1
-
-    @staticmethod
-    def is_valid_cmd(command):
-        """ Check if the command is valid or not as a static method
-        """
-        if command.strip() in VALID_CMDS[1:]:
-            return True
-
-        cmd_str_list = command.split()
-        if len(cmd_str_list) == 2 and cmd_str_list[0] == VALID_CMDS[0]:
-            if RobotSimulator.is_valid_place(cmd_str_list[1]):
-                return True
-            else:
-                print("Command:", command.rstrip(), "is not a valid PLACE command")
-
-        return False
-
-    @staticmethod
-    def is_valid_place(cmd_str):
-        """ Check if place command is valid or not
-        """
-        cmd_strs = cmd_str.split(',')
-        if len(cmd_strs) == 3:
-            for x in cmd_strs[:2]:
-                if int(x) not in range(5):
-                    return False
-            if cmd_strs[2].strip() in VALID_DIRECTIONS:
-                return True
-
-        return False
+        return reports

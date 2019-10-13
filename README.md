@@ -5,29 +5,37 @@
 
 - Toy Robot Simulator to move it on a sqaure tabletop of 5*5 units
 
-- Written in Python 3.7 and tested on AWS EC2 instance with Amazon Linux
+- Compatible with Python 3.7 and tested with pytest
 
 ## How to run
 
 - Run with main.py and provide input file path with commands as command argument, for example:
 
-	python main.py input/first.txt
+	python main.py file://input/first.txt
+
+- There are 4 options to provide the input:
+
+    STDIN: stdin
+    File: file://<path_to_file>
+    sftp: sftp://<remote_path_to_file>
+    s3: s3://<Bucket_name>/<Object_name>
+    #sftp or S3 access parameters can be provided by Environment variables or in constants.py
 
 - To download python 3.7, please refer https://www.python.org/downloads/
 
-- Output will provide in standard output
+- Output will be provide in standard output or file by providing option "LOADER_TYPE" in ENV or "constants.py"
 
 ## To run test cases
 
-- All test cases are written in 'test.py' with unittest library
+- All test cases are written with pytest
 
 - To install unittest library:
 
-	pip install unittest
+	pip install -r requirements.txt
 
 - Run command:
 
-	python test.py
+	pytest
 
 ## Problem Description
 

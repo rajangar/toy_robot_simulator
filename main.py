@@ -1,25 +1,35 @@
 import sys
-from extract_command_type import ExtractCommandType
+from extract_input_type import ExtractInputType
 from loader_type import LoaderType
 from simulator import RobotSimulator
 
 
 class Main:
-    """ Main class to get input file with commands
-    And call Robot simulator to run the commands
+    """ Main class to get input type or file with commands
+    Call Robot simulator to run the commands
+    And run loader to load the results in file or stdout
     """
     def __init__(self, arg):
+        """
+        Pick the input argument
+        :param arg: input type or/and file name
+        """
         self.arg = arg
 
     def run(self):
-        """ Calling Simulator to run commands
         """
-        extract_obj = ExtractCommandType.extract_type(self.arg)
-        commands = extract_obj.extract(self.arg)
+        Extract the commands, run for Robot and load
+        :return: Return the result list
+        """
+        extract_obj = ExtractInputType.extract_type(self.arg)
+        lines = extract_obj.extract(self.arg)
 
-        results = RobotSimulator().simulate(commands)
+        # Main simulation happens here
+        results = RobotSimulator().simulate(lines)
 
         LoaderType.loader_type().load(results)
+
+        return results
 
 
 if __name__ == '__main__':
