@@ -1,6 +1,6 @@
 import pytest
-from command import *
-from toy_robot import ToyRobot
+from toy_simulator.command import *
+from toy_simulator.toy_robot import ToyRobot
 
 
 class TestCommands:

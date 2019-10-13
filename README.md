@@ -3,25 +3,35 @@
 
 ## Description
 
-- Toy Robot Simulator to move it on a sqaure tabletop of 5*5 units
+- Toy Robot Simulator to move it on a square tabletop of 5*5 units
 
 - Compatible with Python 3.7 and tested with pytest
 
 ## How to run
 
+- To download python 3.7, please refer https://www.python.org/downloads/
+
+- Install required packages:
+
+    `pip install -r requirements.txt`
+
 - Run with main.py and provide input file path with commands as command argument, for example:
 
-	python main.py file://input/first.txt
+    `cd toy_simulator`
+    
+    `python main.py file://tests/input/first.txt`
 
 - There are 4 options to provide the input:
 
-    STDIN: stdin
-    File: file://<path_to_file>
-    sftp: sftp://<remote_path_to_file>
-    s3: s3://<Bucket_name>/<Object_name>
-    #sftp or S3 access parameters can be provided by Environment variables or in constants.py
-
-- To download python 3.7, please refer https://www.python.org/downloads/
+    `STDIN: stdin`
+    
+    `File: file://<path_to_file>`
+    
+    `sftp: sftp://<remote_path_to_file>`
+    
+    `s3: s3://<Bucket_name>/<Object_name>`
+    
+    `#sftp or S3 access parameters can be provided by Environment variables or in constants.py`
 
 - Output will be provide in standard output or file by providing option "LOADER_TYPE" in ENV or "constants.py"
 
@@ -29,13 +39,15 @@
 
 - All test cases are written with pytest
 
-- To install unittest library:
+- To install pytest library:
 
-	pip install -r requirements.txt
+	`pip install -r requirements.txt`
 
 - Run command:
 
-	pytest
+    `cd toy_simulator`
+    
+     `python -m pytest`
 
 ## Problem Description
 
