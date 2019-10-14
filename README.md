@@ -1,5 +1,5 @@
-# toy_robot
-===========
+# Toy Robot Simulator
+
 
 ## Description
 
@@ -48,6 +48,30 @@
     `cd toy_simulator`
     
      `python -m pytest`
+
+## Design
+
+- Robot class provides the current location of Robot and operations on Table
+
+- Table class provides the Table top matrix and validate the location of Robot on it
+
+- Command class provides different types of commands by inheritance, which provide operations on Robot
+
+- Starting with main class which invoke Extractor, Simulator and Loader
+
+- There are four different type of Extractors included, which can be extended further for different types of extractors by deriving from  base Extractor class
+
+- Similarly Loaders can be extended by deriving from base Loader class. Currently stdout and file type loaders
+
+- Main logic to simulate Robot is invoking from Simulator class which contains Robot and CommandType to find the type of command
+
+- It can be easliy extendable for more:
+	- Input types (Extractors)
+	- Output types (Loaders)
+	- Robots
+	- Dimensions of tables
+	- Tables
+	- Commands to run
 
 ## Problem Description
 
